@@ -1,4 +1,5 @@
-import React, { FC, useState } from 'react'
+import { FC } from 'react'
+import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import { useAppDispatch } from '../../hooks/TypedAppDispatch'
 import { registration } from '../../services/AuthService'
@@ -9,7 +10,7 @@ import {
 } from '../../store/AuthSlice/AuthSlice'
 import { setTokens } from '../../utils/utils'
 
-interface RegistrationFormData {
+interface IRegistrationFormValues {
 	firstName: string
 	lastName: string
 	email: string
@@ -19,23 +20,13 @@ interface RegistrationFormData {
 const RegistrationForm: FC = () => {
 	const dispatch = useAppDispatch()
 	const navigate = useNavigate()
-	const [formData, setFormData] = useState<RegistrationFormData>({
-		firstName: '',
-		lastName: '',
-		email: '',
-		password: '',
-	})
+	const {
+		register,
+		handleSubmit,
+		formState: { errors },
+	} = useForm<IRegistrationFormValues>()
 
-	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		const { name, value } = e.target
-		setFormData(prevData => ({
-			...prevData,
-			[name]: value,
-		}))
-	}
-
-	const handleSubmit = async (e: React.FormEvent) => {
-		e.preventDefault()
+	const onSubmit = async (formData: IRegistrationFormValues) => {
 		try {
 			dispatch(setIsFetching(true))
 			const response = await registration(formData)
@@ -53,34 +44,26 @@ const RegistrationForm: FC = () => {
 	}
 
 	return (
-		<form onSubmit={handleSubmit}>
+		<form onSubmit={handleSubmit(onSubmit)}>
 			<input
 				type='text'
-				name='firstName'
-				value={formData.firstName}
-				onChange={handleChange}
-				placeholder='Имя'
+				{...register('firstName', { required: 'firstName is required' })}
+				placeholder='firstName'
 			/>
 			<input
 				type='text'
-				name='lastName'
-				value={formData.lastName}
-				onChange={handleChange}
-				placeholder='Фамилия'
+				{...register('lastName', { required: 'lastName is required' })}
+				placeholder='lastName'
 			/>
 			<input
 				type='email'
-				name='email'
-				value={formData.email}
-				onChange={handleChange}
-				placeholder='Email'
+				{...register('email', { required: 'Email is required' })}
+				placeholder='email'
 			/>
 			<input
 				type='password'
-				name='password'
-				value={formData.password}
-				onChange={handleChange}
-				placeholder='Пароль'
+				{...register('password', { required: 'Password is required' })}
+				placeholder='password'
 			/>
 			<button type='submit'>Зарегистрироваться</button>
 		</form>

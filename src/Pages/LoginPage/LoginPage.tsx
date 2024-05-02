@@ -1,7 +1,8 @@
-import React, { FC, useState } from 'react'
+import { FC } from 'react'
+import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import { useAppDispatch } from '../../hooks/TypedAppDispatch'
-import { login } from '../../services/AuthService' // Импортируем функцию login из нашего сервиса
+import { login } from '../../services/AuthService'
 import {
 	setError,
 	setIsFetching,
@@ -9,7 +10,7 @@ import {
 } from '../../store/AuthSlice/AuthSlice'
 import { setTokens } from '../../utils/utils'
 
-interface LoginFormValues {
+interface ILoginFormValues {
 	email: string
 	password: string
 }
@@ -17,22 +18,13 @@ interface LoginFormValues {
 const LoginForm: FC = () => {
 	const dispatch = useAppDispatch()
 	const navigate = useNavigate()
+	const {
+		register,
+		handleSubmit,
+		formState: { errors },
+	} = useForm<ILoginFormValues>()
 
-	const [formData, setFormData] = useState<LoginFormValues>({
-		email: '',
-		password: '',
-	})
-
-	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		const { name, value } = e.target
-		setFormData(prevData => ({
-			...prevData,
-			[name]: value,
-		}))
-	}
-
-	const handleSubmit = async (e: React.FormEvent) => {
-		e.preventDefault()
+	const onSubmit = async (formData: ILoginFormValues) => {
 		try {
 			dispatch(setIsFetching(true))
 			const response = await login(formData)
@@ -51,21 +43,21 @@ const LoginForm: FC = () => {
 	}
 
 	return (
-		<form onSubmit={handleSubmit}>
+		<form onSubmit={handleSubmit(onSubmit)}>
 			<input
 				type='email'
-				name='email'
-				value={formData.email}
-				onChange={handleChange}
+				{...register('email', { required: 'Email is required' })}
 				placeholder='Email'
 			/>
+			{errors.email && <span>{errors.email.message}</span>}
+
 			<input
 				type='password'
-				name='password'
-				value={formData.password}
-				onChange={handleChange}
+				{...register('password', { required: 'Password is required' })}
 				placeholder='Пароль'
 			/>
+			{errors.password && <span>{errors.password.message}</span>}
+
 			<button type='submit'>Войти</button>
 		</form>
 	)
