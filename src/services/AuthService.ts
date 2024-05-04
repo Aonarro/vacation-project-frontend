@@ -1,5 +1,5 @@
+import { createAsyncThunk } from '@reduxjs/toolkit'
 import api from '../api/axios'
-import { setUser } from '../store/AuthSlice/AuthSlice'
 
 interface IAuthorizationResponse {
 	message: string
@@ -10,7 +10,17 @@ interface IAuthorizationResponse {
 		firstName: string
 		lastName: string
 		email: string
-		password: string
+		roleId: number
+	}
+}
+
+interface IAutoLoginResponse {
+	message: string
+	user: {
+		userId: number
+		firstName: string
+		lastName: string
+		email: string
 		roleId: number
 	}
 }
@@ -20,6 +30,10 @@ interface ILoginCredentials {
 	password: string
 }
 
+interface IAutoLoginCredentials {
+	email: string
+}
+
 interface IRegistrationCredentials {
 	firstName: string
 	lastName: string
@@ -27,23 +41,29 @@ interface IRegistrationCredentials {
 	password: string
 }
 
-export const registration = async (credentials: IRegistrationCredentials) => {
+export const registration = createAsyncThunk<
+	IAuthorizationResponse,
+	IRegistrationCredentials
+>('user/registration', async credentials => {
 	const response = await api.post<IAuthorizationResponse>(
 		'/registration',
 		credentials
 	)
-	return response.data as IAuthorizationResponse
-}
+	return response.data
+})
 
-export const login = async (credentials: ILoginCredentials) => {
+export const login = createAsyncThunk<
+	IAuthorizationResponse,
+	ILoginCredentials
+>('user/login', async credentials => {
 	const response = await api.post<IAuthorizationResponse>('/login', credentials)
+	return response.data
+})
 
-	return response.data as IAuthorizationResponse
-}
-
-export const logout = () => {
-	setUser(null)
-	localStorage.removeItem('accessToken')
-	document.cookie =
-		'refreshToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
-}
+export const autoLogin = createAsyncThunk<IAutoLoginResponse>(
+	'user/auto-login',
+	async () => {
+		const response = await api.get<IAutoLoginResponse>('/auto-login')
+		return response.data
+	}
+)

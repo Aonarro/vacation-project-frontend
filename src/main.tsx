@@ -10,7 +10,6 @@ import { store } from './store/Store'
 ReactDOM.createRoot(document.getElementById('root')!).render(
 	<React.StrictMode>
 		<ReactNotifications />
-		{/* Provider store */}
 		<Provider store={store}>
 			<BrowserRouter>
 				<Layout />

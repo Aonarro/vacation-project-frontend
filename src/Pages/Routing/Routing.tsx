@@ -1,17 +1,16 @@
 import { FC } from 'react'
 import { Route, Routes } from 'react-router-dom'
 import { HomePage } from '../HomePage/HomePage'
-import LoginPage from '../LoginPage/LoginPage'
-import RegitrationPage from '../RegistrationPage/RegistrationPage'
+import { NotFoundPage } from '../NotFoundPage/NotFoundPage'
+import { VacationsPage } from '../Vacations/VacationsPage'
 
 export const Routing: FC = () => {
 	return (
 		<Routes>
 			<Route index path='/' element={<HomePage />} />
-			{/* <Route path='/' element={<Navigate to='/home' />} /> */}
+			<Route path='/vacations' element={<VacationsPage />} />
 
-			<Route path='/login' element={<LoginPage />} />
-			<Route path='/registration' element={<RegitrationPage />} />
+			<Route path='*' element={<NotFoundPage />} />
 		</Routes>
 	)
 }

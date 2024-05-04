@@ -1,7 +1,10 @@
 import axios, { AxiosResponse, InternalAxiosRequestConfig } from 'axios'
+import { logout } from '../store/AuthSlice/AuthSlice'
+import { store } from '../store/Store'
+import { removeTokens } from '../utils/utils'
 
 const instance = axios.create({
-	baseURL: 'http://localhost:5000/',
+	baseURL: 'http://localhost:5000/api',
 	withCredentials: true,
 })
 
@@ -28,6 +31,10 @@ instance.interceptors.response.use(
 		return response
 	},
 	(error: any) => {
+		if (error.response && error.response.status === 401) {
+			removeTokens()
+			window.location.href = '/'
+		}
 		return Promise.reject(error)
 	}
 )

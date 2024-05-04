@@ -1,0 +1,39 @@
+.headerContainer {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 20px;
+	background-color: #f0f3f5;
+	color: #2c3a4b;
+}
+
+.headerContainer div {
+	font-size: 18px;
+}
+
+.onAir {
+	display: flex;
+	align-items: center;
+}
+
+.userName {
+	font-weight: bold;
+	margin: 0 5px;
+}
+
+.noConnect {
+	font-style: italic;
+	margin-right: 5px;
+}
+
+.logout {
+	cursor: pointer;
+	margin-left: 10px;
+	color: #007bff;
+	text-decoration: none;
+}
+
+.logout:hover {
+	text-decoration: underline;
+	color: #0056b3;
+}
