@@ -1,15 +1,11 @@
-import api from '../../api/axios'
+import { VacationCard } from '../../components/VacationCard/VacationCard'
 
 export const VacationsPage = () => {
-	async function ProtectedFunc() {
-		const response = await api.get('protected')
-		console.log(response)
-	}
-
 	return (
 		<div>
-			VacationsPage
-			<button onClick={ProtectedFunc}>Click</button>
+			Hello Vacations
+			<VacationCard />
+			{/* <Loader /> */}
 		</div>
 	)
 }

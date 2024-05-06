@@ -1,41 +1,51 @@
 import { FC } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useAppDispatch } from '../../hooks/TypedAppDispatch'
 import { useAppSelector } from '../../hooks/TypedAppSelector'
+import { warningLogoutNotify } from '../../services/NotifyService'
 import { logout } from '../../store/AuthSlice/AuthSlice'
 import { removeTokens } from '../../utils/utils'
-import styles from './Header.module.scss'
+import s from './Header.module.scss'
 
 export const Header: FC = () => {
 	const dispatch = useAppDispatch()
 	const user = useAppSelector(state => state.auth.user)
+	const navigate = useNavigate()
 
 	const logoutUser = () => {
 		dispatch(logout())
 		removeTokens()
+		warningLogoutNotify('See you next time ')
+	}
+	const onClickLogoHandler = () => {
+		user ? navigate('/vacations') : navigate('/')
 	}
 
 	return (
-		<header className={styles.headerContainer}>
-			<div>Vacations</div>
+		<header
+			className={
+				user ? `${s.headerContainer}` : `${s.headerContainer} ${s.unAuth}`
+			}
+		>
+			<div className={s.logo} onClick={onClickLogoHandler}>
+				Vacations
+			</div>
 			<div>
 				{user ? (
-					<div className={styles.onAir}>
+					<div className={s.rightMenu}>
 						<span>
 							Welcome
-							<span className={styles.userName}>
+							<span className={s.userName}>
 								{user.firstName} {user.lastName}
 							</span>
 						</span>
-						<Link to='/' className={styles.logout} onClick={logoutUser}>
-							Logout
+
+						<Link to='/' className={s.logout} onClick={logoutUser}>
+							<span>Logout</span>
 						</Link>
 					</div>
 				) : (
-					<div className={styles.onAir}>
-						<span className={styles.noConnect}>You are on the floor 🛬</span>
-						<span className={styles.logout}>already logout</span>
-					</div>
+					<></>
 				)}
 			</div>
 		</header>

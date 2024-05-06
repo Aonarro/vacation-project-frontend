@@ -1,8 +1,13 @@
-import { FC } from 'react'
+import { FC, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import { useAppDispatch } from '../../hooks/TypedAppDispatch'
+import { useAppSelector } from '../../hooks/TypedAppSelector'
 import { registration } from '../../services/AuthService'
+import {
+	errorAuthorizationNotify,
+	successAuthorizationNotify,
+} from '../../services/NotifyService'
 import { Button } from '../Button/Button'
 import s from './Registration.module.scss'
 
@@ -22,17 +27,21 @@ const RegistrationForm: FC = () => {
 		formState: { errors },
 	} = useForm<IRegistrationFormValues>()
 
-	const onSubmit = async (formData: IRegistrationFormValues) => {
-		try {
-			await dispatch(registration(formData))
+	const { user, error } = useAppSelector(state => state.auth)
 
-			navigate('/vacations')
-		} catch (error: unknown) {
-			if (error instanceof Error) {
-				console.log(error)
-			}
-		}
+	const onSubmit = async (formData: IRegistrationFormValues) => {
+		await dispatch(registration(formData))
 	}
+
+	useEffect(() => {
+		if (user) {
+			successAuthorizationNotify(`Welcome ${user.firstName}!`)
+			navigate('/vacations')
+		}
+		if (error) {
+			errorAuthorizationNotify(error)
+		}
+	}, [user, error])
 
 	return (
 		<form className={s.registrationForm} onSubmit={handleSubmit(onSubmit)}>

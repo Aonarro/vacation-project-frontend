@@ -13,6 +13,10 @@ interface UserState {
 	isFetching: boolean
 }
 
+interface ErrorPayload {
+	error: string
+}
+
 const initialState: UserState = {
 	user: null,
 	error: null,
@@ -24,15 +28,18 @@ export const userSlice = createSlice({
 	initialState,
 	reducers: {
 		logout: state => {
+			state.isFetching = true
 			state.user = null
 			state.error = null
 			removeTokens()
+			state.isFetching = false
 		},
 	},
 	extraReducers: builder => {
 		builder
 			.addCase(registration.pending, state => {
 				state.isFetching = true
+				state.error = null
 			})
 			.addCase(registration.fulfilled, (state, action) => {
 				state.isFetching = false
@@ -42,10 +49,12 @@ export const userSlice = createSlice({
 			})
 			.addCase(registration.rejected, (state, action) => {
 				state.isFetching = false
-				state.error = action.error.message ?? 'Registration failed'
+				const payload = action.payload as ErrorPayload
+				state.error = payload.error
 			})
 			.addCase(login.pending, state => {
 				state.isFetching = true
+				state.error = null
 			})
 			.addCase(login.fulfilled, (state, action) => {
 				state.isFetching = false
@@ -55,10 +64,12 @@ export const userSlice = createSlice({
 			})
 			.addCase(login.rejected, (state, action) => {
 				state.isFetching = false
-				state.error = action.error.message ?? 'Login failed'
+				const payload = action.payload as ErrorPayload
+				state.error = payload.error
 			})
 			.addCase(autoLogin.pending, state => {
 				state.isFetching = true
+				state.error = null
 			})
 			.addCase(autoLogin.fulfilled, (state, action) => {
 				state.isFetching = false
@@ -67,7 +78,8 @@ export const userSlice = createSlice({
 			})
 			.addCase(autoLogin.rejected, (state, action) => {
 				state.isFetching = false
-				state.error = action.error.message ?? 'Login failed'
+				const payload = action.payload as ErrorPayload
+				state.error = payload.error
 			})
 	},
 })

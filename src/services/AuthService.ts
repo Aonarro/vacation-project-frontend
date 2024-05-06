@@ -30,10 +30,6 @@ interface ILoginCredentials {
 	password: string
 }
 
-interface IAutoLoginCredentials {
-	email: string
-}
-
 interface IRegistrationCredentials {
 	firstName: string
 	lastName: string
@@ -44,26 +40,41 @@ interface IRegistrationCredentials {
 export const registration = createAsyncThunk<
 	IAuthorizationResponse,
 	IRegistrationCredentials
->('user/registration', async credentials => {
-	const response = await api.post<IAuthorizationResponse>(
-		'/registration',
-		credentials
-	)
-	return response.data
+>('user/registration', async (credentials, { rejectWithValue }) => {
+	try {
+		const response = await api.post<IAuthorizationResponse>(
+			'/registration',
+			credentials
+		)
+		return response.data
+	} catch (err) {
+		return rejectWithValue(err.response.data)
+	}
 })
 
 export const login = createAsyncThunk<
 	IAuthorizationResponse,
 	ILoginCredentials
->('user/login', async credentials => {
-	const response = await api.post<IAuthorizationResponse>('/login', credentials)
-	return response.data
+>('user/login', async (credentials, { rejectWithValue }) => {
+	try {
+		const response = await api.post<IAuthorizationResponse>(
+			'/login',
+			credentials
+		)
+		return response.data
+	} catch (err) {
+		return rejectWithValue(err.response.data)
+	}
 })
 
 export const autoLogin = createAsyncThunk<IAutoLoginResponse>(
 	'user/auto-login',
-	async () => {
-		const response = await api.get<IAutoLoginResponse>('/auto-login')
-		return response.data
+	async (_, { rejectWithValue }) => {
+		try {
+			const response = await api.get<IAutoLoginResponse>('/auto-login')
+			return response.data
+		} catch (err) {
+			return rejectWithValue(err.response.data)
+		}
 	}
 )

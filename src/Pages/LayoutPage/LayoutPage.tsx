@@ -4,8 +4,7 @@ import useVerifyLoggedIn from '../../hooks/useVerifyLoggedIn'
 import { Routing } from '../Routing/Routing'
 
 export const Layout: FC = () => {
-	const user = useVerifyLoggedIn()
-	console.log(user)
+	useVerifyLoggedIn()
 	return (
 		<div>
 			<Header />
