@@ -1,5 +1,6 @@
-import { FC } from 'react'
+import { FC, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import LogoutIcon from '../../assets/icons/logOutIcon.svg'
 import { useAppDispatch } from '../../hooks/TypedAppDispatch'
 import { useAppSelector } from '../../hooks/TypedAppSelector'
 import { warningLogoutNotify } from '../../services/NotifyService'
@@ -11,6 +12,8 @@ export const Header: FC = () => {
 	const dispatch = useAppDispatch()
 	const user = useAppSelector(state => state.auth.user)
 	const navigate = useNavigate()
+	const [btn, setBtn] = useState<string | null>()
+	const isAdmin = false
 
 	const logoutUser = () => {
 		dispatch(logout())
@@ -19,6 +22,14 @@ export const Header: FC = () => {
 	}
 	const onClickLogoHandler = () => {
 		user ? navigate('/vacations') : navigate('/')
+	}
+
+	const onClickAdminButtonHandler = (e: MouseEvent) => {
+		const btnName = (e.target as HTMLAnchorElement).getAttribute(
+			'data-button-name'
+		)
+
+		setBtn(btnName)
 	}
 
 	return (
@@ -30,10 +41,70 @@ export const Header: FC = () => {
 			<div className={s.logo} onClick={onClickLogoHandler}>
 				Vacations
 			</div>
-			<div>
+
+			<div className={s.rightMenuWrapper}>
+				{isAdmin && (
+					<div className={s.adminBtns}>
+						<div
+							className={
+								btn === 'add-vacation'
+									? `${s.linkWrapper} ${s.active}`
+									: `${s.linkWrapper}`
+							}
+						>
+							<Link
+								data-button-name='add-vacation'
+								to='/vacation/new'
+								className={
+									btn === 'add-vacation' ? `${s.link} ${s.active}` : `${s.link}`
+								}
+								onClick={onClickAdminButtonHandler}
+							>
+								Add vacation
+							</Link>
+						</div>
+						<div
+							className={
+								btn === 'charts'
+									? `${s.linkWrapper} ${s.active}`
+									: `${s.linkWrapper}`
+							}
+						>
+							<Link
+								to='/vacation/charts'
+								data-button-name='charts'
+								className={
+									btn === 'charts' ? `${s.link} ${s.active}` : `${s.link}`
+								}
+								onClick={onClickAdminButtonHandler}
+							>
+								Charts
+							</Link>
+						</div>
+						<div
+							className={
+								btn === 'csv'
+									? `${s.linkWrapper} ${s.active}`
+									: `${s.linkWrapper}`
+							}
+						>
+							<Link
+								to='/vacation/csv'
+								data-button-name='csv'
+								className={
+									btn === 'csv' ? `${s.link} ${s.active}` : `${s.link}`
+								}
+								onClick={onClickAdminButtonHandler}
+							>
+								CSV
+							</Link>
+						</div>
+					</div>
+				)}
+
 				{user ? (
 					<div className={s.rightMenu}>
-						<span>
+						<span className={s.userInfo}>
 							Welcome
 							<span className={s.userName}>
 								{user.firstName} {user.lastName}
@@ -41,7 +112,7 @@ export const Header: FC = () => {
 						</span>
 
 						<Link to='/' className={s.logout} onClick={logoutUser}>
-							<span>Logout</span>
+							<img src={LogoutIcon} alt='logout' />
 						</Link>
 					</div>
 				) : (
