@@ -12,10 +12,17 @@ export const Header: FC = () => {
 	const dispatch = useAppDispatch()
 	const user = useAppSelector(state => state.auth.user)
 	const navigate = useNavigate()
-	const [btn, setBtn] = useState<string | null>()
-	const isAdmin = false
+	const [adminBtn, setAdminBtn] = useState<string | null>()
+	const isAdmin = true
+
+	const buttonsData = [
+		{ name: 'add-vacation', label: 'Add vacation', to: '/vacation/new' },
+		{ name: 'charts', label: 'Charts', to: '/vacation/charts' },
+		{ name: 'csv', label: 'CSV', to: '/vacation/csv' },
+	]
 
 	const logoutUser = () => {
+		setAdminBtn(null)
 		dispatch(logout())
 		removeTokens()
 		warningLogoutNotify('See you next time ')
@@ -24,12 +31,8 @@ export const Header: FC = () => {
 		user ? navigate('/vacations') : navigate('/')
 	}
 
-	const onClickAdminButtonHandler = (e: MouseEvent) => {
-		const btnName = (e.target as HTMLAnchorElement).getAttribute(
-			'data-button-name'
-		)
-
-		setBtn(btnName)
+	const onClickAdminButtonHandler = (btnId: string) => {
+		setAdminBtn(btnId)
 	}
 
 	return (
@@ -45,60 +48,28 @@ export const Header: FC = () => {
 			<div className={s.rightMenuWrapper}>
 				{isAdmin && (
 					<div className={s.adminBtns}>
-						<div
-							className={
-								btn === 'add-vacation'
-									? `${s.linkWrapper} ${s.active}`
-									: `${s.linkWrapper}`
-							}
-						>
-							<Link
-								data-button-name='add-vacation'
-								to='/vacation/new'
-								className={
-									btn === 'add-vacation' ? `${s.link} ${s.active}` : `${s.link}`
-								}
-								onClick={onClickAdminButtonHandler}
-							>
-								Add vacation
-							</Link>
-						</div>
-						<div
-							className={
-								btn === 'charts'
-									? `${s.linkWrapper} ${s.active}`
-									: `${s.linkWrapper}`
-							}
-						>
-							<Link
-								to='/vacation/charts'
-								data-button-name='charts'
-								className={
-									btn === 'charts' ? `${s.link} ${s.active}` : `${s.link}`
-								}
-								onClick={onClickAdminButtonHandler}
-							>
-								Charts
-							</Link>
-						</div>
-						<div
-							className={
-								btn === 'csv'
-									? `${s.linkWrapper} ${s.active}`
-									: `${s.linkWrapper}`
-							}
-						>
-							<Link
-								to='/vacation/csv'
-								data-button-name='csv'
-								className={
-									btn === 'csv' ? `${s.link} ${s.active}` : `${s.link}`
-								}
-								onClick={onClickAdminButtonHandler}
-							>
-								CSV
-							</Link>
-						</div>
+						{buttonsData.map(({ name, label, to }) => {
+							return (
+								<div
+									className={
+										adminBtn === name
+											? `${s.linkWrapper} ${s.active}`
+											: `${s.linkWrapper}`
+									}
+								>
+									<Link
+										to={to}
+										data-button-name={name}
+										className={
+											adminBtn === name ? `${s.link} ${s.active}` : `${s.link}`
+										}
+										onClick={() => onClickAdminButtonHandler(name)}
+									>
+										{label}
+									</Link>
+								</div>
+							)
+						})}
 					</div>
 				)}
 
