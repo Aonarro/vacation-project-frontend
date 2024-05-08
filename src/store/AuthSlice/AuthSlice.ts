@@ -8,6 +8,7 @@ interface UserState {
 		firstName: string
 		lastName: string
 		email: string
+		roleId: number
 	} | null
 	error: string | null
 	isFetching: boolean

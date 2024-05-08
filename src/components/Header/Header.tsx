@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import LogoutIcon from '../../assets/icons/logOutIcon.svg'
 import { useAppDispatch } from '../../hooks/TypedAppDispatch'
 import { useAppSelector } from '../../hooks/TypedAppSelector'
+import useVerifyAdmin from '../../hooks/useVerifyAdmin'
 import { warningLogoutNotify } from '../../services/NotifyService'
 import { logout } from '../../store/AuthSlice/AuthSlice'
 import { removeTokens } from '../../utils/utils'
@@ -13,7 +14,7 @@ export const Header: FC = () => {
 	const user = useAppSelector(state => state.auth.user)
 	const navigate = useNavigate()
 	const [adminBtn, setAdminBtn] = useState<string | null>()
-	const isAdmin = true
+	const isAdmin = useVerifyAdmin()
 
 	const buttonsData = [
 		{ name: 'add-vacation', label: 'Add vacation', to: '/vacation/new' },
@@ -51,6 +52,7 @@ export const Header: FC = () => {
 						{buttonsData.map(({ name, label, to }) => {
 							return (
 								<div
+									key={name}
 									className={
 										adminBtn === name
 											? `${s.linkWrapper} ${s.active}`
