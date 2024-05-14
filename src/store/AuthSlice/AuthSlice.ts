@@ -26,7 +26,7 @@ const initialState: UserState = {
 
 export const userSlice = createSlice({
 	name: 'user',
-	initialState,
+	initialState: initialState,
 	reducers: {
 		logout: state => {
 			state.isFetching = true

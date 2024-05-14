@@ -16,6 +16,22 @@ export const successAuthorizationNotify = (message: string) => {
 	})
 }
 
+export const successNewVacationNotify = (message: string) => {
+	Store.addNotification({
+		title: 'Success!',
+		message,
+		type: 'success',
+		insert: 'top',
+		container: 'bottom-right',
+		animationIn: ['animated', 'fadeIn'],
+		animationOut: ['animated', 'fadeOut'],
+		dismiss: {
+			duration: 3000,
+			onScreen: true,
+		},
+	})
+}
+
 export const errorAuthorizationNotify = (message: string) => {
 	Store.addNotification({
 		title: 'An error has occurred',

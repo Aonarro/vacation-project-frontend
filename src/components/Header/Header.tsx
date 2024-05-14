@@ -1,5 +1,5 @@
-import { FC, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { FC, useEffect, useState } from 'react'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import LogoutIcon from '../../assets/icons/logOutIcon.svg'
 import { useAppDispatch } from '../../hooks/TypedAppDispatch'
 import { useAppSelector } from '../../hooks/TypedAppSelector'
@@ -15,6 +15,7 @@ export const Header: FC = () => {
 	const navigate = useNavigate()
 	const [adminBtn, setAdminBtn] = useState<string | null>()
 	const isAdmin = useVerifyAdmin()
+	const location = useLocation()
 
 	const buttonsData = [
 		{ name: 'add-vacation', label: 'Add vacation', to: '/vacation/new' },
@@ -22,14 +23,22 @@ export const Header: FC = () => {
 		{ name: 'csv', label: 'CSV', to: '/vacation/csv' },
 	]
 
+	useEffect(() => {
+		if (!location.pathname.includes('/vacation')) {
+			setAdminBtn(null)
+		}
+	}, [location.pathname])
+
 	const logoutUser = () => {
 		setAdminBtn(null)
 		dispatch(logout())
 		removeTokens()
 		warningLogoutNotify('See you next time ')
 	}
+
 	const onClickLogoHandler = () => {
 		user ? navigate('/vacations') : navigate('/')
+		setAdminBtn(null)
 	}
 
 	const onClickAdminButtonHandler = (btnId: string) => {

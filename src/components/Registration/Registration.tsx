@@ -49,7 +49,7 @@ const RegistrationForm: FC = () => {
 				className={`${s.loginInput} ${errors.firstName ? s.input_error : ''}`}
 				type='text'
 				{...register('firstName', { required: 'firstName is required' })}
-				placeholder='firstName'
+				placeholder='FirstName'
 			/>
 			{errors.firstName && (
 				<span className={s.inputErrorMsg}>{errors.firstName.message}</span>
@@ -58,7 +58,7 @@ const RegistrationForm: FC = () => {
 				className={`${s.loginInput} ${errors.lastName ? s.input_error : ''}`}
 				type='text'
 				{...register('lastName', { required: 'lastName is required' })}
-				placeholder='lastName'
+				placeholder='LastName'
 			/>
 			{errors.lastName && (
 				<span className={s.inputErrorMsg}>{errors.lastName.message}</span>
