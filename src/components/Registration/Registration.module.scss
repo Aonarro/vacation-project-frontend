@@ -17,32 +17,32 @@
 	&:hover {
 		box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); // Добавляем тень при наведении
 	}
+
+	&.input_error {
+		border-color: #ff0000;
+		animation: shake 0.5s;
+	}
+
+	@keyframes shake {
+		0% {
+			transform: translateX(0);
+		}
+		25% {
+			transform: translateX(-5px);
+		}
+		50% {
+			transform: translateX(5px);
+		}
+		75% {
+			transform: translateX(-5px);
+		}
+		100% {
+			transform: translateX(0);
+		}
+	}
 }
 
 .inputErrorMsg {
 	color: #ff0000;
 	font-size: 13px;
-}
-
-.input_error {
-	border-color: #ff0000;
-	animation: shake 0.5s;
-}
-
-@keyframes shake {
-	0% {
-		transform: translateX(0);
-	}
-	25% {
-		transform: translateX(-5px);
-	}
-	50% {
-		transform: translateX(5px);
-	}
-	75% {
-		transform: translateX(-5px);
-	}
-	100% {
-		transform: translateX(0);
-	}
 }

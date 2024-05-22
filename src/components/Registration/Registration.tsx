@@ -4,10 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { useAppDispatch } from '../../hooks/TypedAppDispatch'
 import { useAppSelector } from '../../hooks/TypedAppSelector'
 import { registration } from '../../services/AuthService'
-import {
-	errorAuthorizationNotify,
-	successAuthorizationNotify,
-} from '../../services/NotifyService'
+import { onErrorNotify, onSuccessNotify } from '../../services/NotifyService'
 import { Button } from '../Button/Button'
 import s from './Registration.module.scss'
 
@@ -25,7 +22,7 @@ const RegistrationForm: FC = () => {
 		register,
 		handleSubmit,
 		formState: { errors },
-	} = useForm<IRegistrationFormValues>()
+	} = useForm<IRegistrationFormValues>({ mode: 'onChange' })
 
 	const { user, error } = useAppSelector(state => state.auth)
 
@@ -35,13 +32,12 @@ const RegistrationForm: FC = () => {
 
 	useEffect(() => {
 		if (user) {
-			successAuthorizationNotify(`Welcome ${user.firstName}!`)
+			onSuccessNotify(`Welcome ${user.firstName}!`, 'Authorization success')
 			navigate('/vacations')
+		} else if (error) {
+			onErrorNotify(error, 'Error')
 		}
-		if (error) {
-			errorAuthorizationNotify(error)
-		}
-	}, [user, error])
+	}, [user, error, navigate])
 
 	return (
 		<form className={s.registrationForm} onSubmit={handleSubmit(onSubmit)}>
@@ -51,18 +47,18 @@ const RegistrationForm: FC = () => {
 				{...register('firstName', { required: 'firstName is required' })}
 				placeholder='FirstName'
 			/>
-			{errors.firstName && (
+			{/* {errors.firstName && (
 				<span className={s.inputErrorMsg}>{errors.firstName.message}</span>
-			)}
+			)} */}
 			<input
 				className={`${s.loginInput} ${errors.lastName ? s.input_error : ''}`}
 				type='text'
 				{...register('lastName', { required: 'lastName is required' })}
 				placeholder='LastName'
 			/>
-			{errors.lastName && (
+			{/* {errors.lastName && (
 				<span className={s.inputErrorMsg}>{errors.lastName.message}</span>
-			)}
+			)} */}
 			<input
 				className={`${s.loginInput} ${errors.email ? s.input_error : ''}`}
 				type='email'
@@ -75,9 +71,9 @@ const RegistrationForm: FC = () => {
 				})}
 				placeholder='Enter email'
 			/>
-			{errors.email && (
+			{/* {errors.email && (
 				<span className={s.inputErrorMsg}>{errors.email.message}</span>
-			)}
+			)} */}
 			<input
 				className={`${s.loginInput} ${errors.password ? s.input_error : ''}`}
 				type='password'
@@ -90,9 +86,9 @@ const RegistrationForm: FC = () => {
 				})}
 				placeholder='Enter password'
 			/>
-			{errors.password && (
+			{/* {errors.password && (
 				<span className={s.inputErrorMsg}>{errors.password.message}</span>
-			)}
+			)} */}
 			<Button type='submit'>Registration</Button>
 		</form>
 	)

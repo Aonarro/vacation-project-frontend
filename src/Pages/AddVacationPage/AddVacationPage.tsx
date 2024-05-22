@@ -5,7 +5,7 @@ import { AdminVacationForm } from '../../components/AdminVacationForm/AdminVacat
 export const AddVacationPage: FC = () => {
 	return (
 		<div className={s.vacationPageWrapper}>
-			<AdminVacationForm notifyMessage='Your vacation successfuly created' />
+			<AdminVacationForm notifyMessage={'Your vacation successfully created'} />
 		</div>
 	)
 }

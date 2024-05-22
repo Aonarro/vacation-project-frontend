@@ -4,36 +4,37 @@ import LogoutIcon from '../../assets/icons/logOutIcon.svg'
 import { useAppDispatch } from '../../hooks/TypedAppDispatch'
 import { useAppSelector } from '../../hooks/TypedAppSelector'
 import useVerifyAdmin from '../../hooks/useVerifyAdmin'
-import { warningLogoutNotify } from '../../services/NotifyService'
 import { logout } from '../../store/AuthSlice/AuthSlice'
 import { removeTokens } from '../../utils/utils'
 import s from './Header.module.scss'
+import { onNoticeNotify } from '../../services/NotifyService'
+import { Csv } from '../Csv/Csv'
 
 export const Header: FC = () => {
 	const dispatch = useAppDispatch()
 	const user = useAppSelector(state => state.auth.user)
 	const navigate = useNavigate()
 	const [adminBtn, setAdminBtn] = useState<string | null>()
-	const isAdmin = useVerifyAdmin()
-	const location = useLocation()
+	const { isAdmin } = useVerifyAdmin()
+	const { pathname } = useLocation()
 
 	const buttonsData = [
 		{ name: 'add-vacation', label: 'Add vacation', to: '/vacation/new' },
 		{ name: 'charts', label: 'Charts', to: '/vacation/charts' },
-		{ name: 'csv', label: 'CSV', to: '/vacation/csv' },
 	]
 
 	useEffect(() => {
-		if (!location.pathname.includes('/vacation')) {
+		const vacationPathRegex = /^\/vacation\/.*/
+		if (!vacationPathRegex.test(pathname)) {
 			setAdminBtn(null)
 		}
-	}, [location.pathname])
+	}, [pathname])
 
 	const logoutUser = () => {
 		setAdminBtn(null)
 		dispatch(logout())
 		removeTokens()
-		warningLogoutNotify('See you next time ')
+		onNoticeNotify(`See you next time, ${user?.firstName}`, 'Logout')
 	}
 
 	const onClickLogoHandler = () => {
@@ -81,6 +82,7 @@ export const Header: FC = () => {
 								</div>
 							)
 						})}
+						<Csv />
 					</div>
 				)}
 

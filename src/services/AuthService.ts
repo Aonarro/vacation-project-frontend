@@ -2,7 +2,6 @@ import { createAsyncThunk } from '@reduxjs/toolkit'
 import api from '../api/axios'
 
 interface IAuthorizationResponse {
-	message: string
 	access_token: string
 	refresh_token: string
 	user: {
@@ -15,7 +14,6 @@ interface IAuthorizationResponse {
 }
 
 interface IAutoLoginResponse {
-	message: string
 	user: {
 		userId: number
 		firstName: string

@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit'
 import { autoLogin, login, registration } from '../../services/AuthService'
 import { removeTokens, setTokens } from '../../utils/utils'
 
-interface UserState {
+interface IUserState {
 	user: {
 		userId: number
 		firstName: string
@@ -14,11 +14,7 @@ interface UserState {
 	isFetching: boolean
 }
 
-interface ErrorPayload {
-	error: string
-}
-
-const initialState: UserState = {
+const initialState: IUserState = {
 	user: null,
 	error: null,
 	isFetching: false,
@@ -35,6 +31,9 @@ export const userSlice = createSlice({
 			removeTokens()
 			state.isFetching = false
 		},
+		clearError: state => {
+			state.error = null
+		},
 	},
 	extraReducers: builder => {
 		builder
@@ -50,8 +49,7 @@ export const userSlice = createSlice({
 			})
 			.addCase(registration.rejected, (state, action) => {
 				state.isFetching = false
-				const payload = action.payload as ErrorPayload
-				state.error = payload.error
+				state.error = action.payload as string
 			})
 			.addCase(login.pending, state => {
 				state.isFetching = true
@@ -65,8 +63,7 @@ export const userSlice = createSlice({
 			})
 			.addCase(login.rejected, (state, action) => {
 				state.isFetching = false
-				const payload = action.payload as ErrorPayload
-				state.error = payload.error
+				state.error = action.payload as string
 			})
 			.addCase(autoLogin.pending, state => {
 				state.isFetching = true
@@ -79,12 +76,11 @@ export const userSlice = createSlice({
 			})
 			.addCase(autoLogin.rejected, (state, action) => {
 				state.isFetching = false
-				const payload = action.payload as ErrorPayload
-				state.error = payload.error
+				state.error = action.payload as string
 			})
 	},
 })
 
-export const { logout } = userSlice.actions
+export const { logout, clearError } = userSlice.actions
 
 export default userSlice.reducer

@@ -5,10 +5,13 @@ import LoginForm from '../../components/Login/Login'
 import RegistrationForm from '../../components/Registration/Registration'
 import { useAppSelector } from '../../hooks/TypedAppSelector'
 import s from './HomePage.module.scss'
+import { useAppDispatch } from '../../hooks/TypedAppDispatch'
+import { clearError } from '../../store/AuthSlice/AuthSlice'
 
 export const HomePage: FC = () => {
 	const [authType, setAuthType] = useState('login')
 	const { isFetching } = useAppSelector(state => state.auth)
+	const dispatch = useAppDispatch()
 
 	return (
 		<>
@@ -26,12 +29,18 @@ export const HomePage: FC = () => {
 								className={`${s.auth_type_btn} ${
 									authType === 'login' ? s.active : ''
 								}`}
-								onClick={() => setAuthType('login')}
+								onClick={() => {
+									setAuthType('login')
+									dispatch(clearError())
+								}}
 							>
 								Login
 							</button>
 							<button
-								onClick={() => setAuthType('registration')}
+								onClick={() => {
+									setAuthType('registration')
+									dispatch(clearError())
+								}}
 								className={`${s.auth_type_btn} ${
 									authType === 'registration' ? s.active : ''
 								}`}

@@ -13,10 +13,8 @@ function useVerifyLoggedIn() {
 	const handleAutoLogin = useCallback(() => {
 		const { accessToken, refreshToken } = getTokensFromStorage()
 		if (!accessToken && !refreshToken) {
-			console.log('login')
 			navigate('/')
 		} else if (!user) {
-			console.log('autologin')
 			dispatch(autoLogin())
 		}
 	}, [dispatch, navigate])

@@ -6,6 +6,7 @@ import { BrowserRouter } from 'react-router-dom'
 import { Layout } from './Pages/LayoutPage/LayoutPage'
 import './index.scss'
 import { store } from './store/Store'
+import React from 'react'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
 	// <React.StrictMode>
