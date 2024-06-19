@@ -18,11 +18,7 @@ This project is called **Vacation**. It resembles a travel agency platform with 
    cd vacation-project-frontend
 
 3. Install the dependencies:
-   npm install
-
-   or
-
-   yarn install
+   npm install or yarn install
 
 ### Available Scripts
 
